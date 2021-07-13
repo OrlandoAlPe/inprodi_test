@@ -41,9 +41,14 @@ class _singnUpState extends State<singnUp> {
               child: Text('Registrar'),
             ),
             Text('Ya tienes cuenta?'),
-            Text(
-              'Ingresa!',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            GestureDetector(
+              child: Text(
+                'Ingresa!',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              onTap: ()=>{
+                Navigator.of(context).pop()
+              },
             ),
           ],
         ),

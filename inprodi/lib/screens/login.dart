@@ -24,9 +24,14 @@ class _loginState extends State<login> {
               child: Text('Entrar'),
             ),
             Text('No tienes cuenta?'),
-            Text(
-              'Registrate!',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            GestureDetector(
+              child: Text(
+                'Registrate!',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              onTap: ()=>{
+                Navigator.of(context).pushNamed('/signUp')
+              },
             ),
           ],
         ),
