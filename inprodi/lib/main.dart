@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:inprodi/providers/user.dart';
 import 'package:inprodi/screens/home.dart';
@@ -24,21 +26,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  void authCheck() async {
-    bool authStatus = await UserCredentials.getAuth();
-    if (authStatus == false) {
-      Provider.of<User>(context, listen: false).loginChange(false);
-    } else {
-      Provider.of<User>(context, listen: false).loginChange(true);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    authCheck();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
