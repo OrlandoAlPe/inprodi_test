@@ -1,4 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:inprodi/utils/userCredentials.dart';
+import 'package:provider/provider.dart';
+import 'package:inprodi/providers/user.dart';
 
 class login extends StatefulWidget {
   const login({Key? key}) : super(key: key);
@@ -8,6 +13,21 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
+  final _emailCtrl = TextEditingController();
+  final _pswdCtrl = TextEditingController();
+
+  Future logIn(String email, String password) async {
+    String ogEmail = await UserCredentials.getEmail();
+    String ogPass = await UserCredentials.getPswd();
+    String ogName = await UserCredentials.getNombre();
+    log(ogName + ogPass + ogEmail);
+    if (email == ogEmail && password == ogPass) {
+      Provider.of<User>(context, listen: false).loginChange(true);
+      await UserCredentials.setAuthStatus(true);
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,11 +36,17 @@ class _loginState extends State<login> {
           children: [
             Text('Bienvenido'),
             Text('Correo'),
-            TextField(),
+            TextField(
+              controller: _emailCtrl,
+            ),
             Text('Contrasena'),
-            TextField(),
+            TextField(
+              controller: _pswdCtrl,
+            ),
             TextButton(
-              onPressed: () => {},
+              onPressed: () => {
+                logIn(_emailCtrl.text, _pswdCtrl.text),
+              },
               child: Text('Entrar'),
             ),
             Text('No tienes cuenta?'),
@@ -29,8 +55,8 @@ class _loginState extends State<login> {
                 'Registrate!',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              onTap: ()=>{
-                Navigator.of(context).pushNamed('/signUp')
+              onTap: () => {
+                Navigator.of(context).pushNamed('/signUp'),
               },
             ),
           ],

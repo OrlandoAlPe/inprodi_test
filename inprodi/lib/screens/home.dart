@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'package:inprodi/providers/user.dart';
 class home extends StatelessWidget {
   const home({Key? key}) : super(key: key);
 
@@ -12,7 +13,7 @@ class home extends StatelessWidget {
         child: Column(
           children: [
             Center(
-              child: Text('Hola, JOSE'),
+              child: Text('Hola, ' + Provider.of<User>(context).nombre),
             ),
             Text('LISTA '),
           ],
