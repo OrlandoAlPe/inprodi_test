@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:inprodi/utils/userCredentials.dart';
 
 class singnUp extends StatefulWidget {
-  const singnUp({Key? key}) : super(key: key);
+  const singnUp({Key ?key}) : super(key: key);
 
   @override
   _singnUpState createState() => _singnUpState();

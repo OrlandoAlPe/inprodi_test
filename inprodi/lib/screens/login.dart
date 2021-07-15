@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:inprodi/utils/userCredentials.dart';
 import 'package:provider/provider.dart';
@@ -17,14 +15,14 @@ class _loginState extends State<login> {
   final _pswdCtrl = TextEditingController();
 
   Future logIn(String email, String password) async {
-    String ogEmail = await UserCredentials.getEmail();
-    String ogPass = await UserCredentials.getPswd();
-    String ogName = await UserCredentials.getNombre();
+    String ogEmail = await UserCredentials.getEmail() ?? 'Nomail%.%!@' ;
+    String ogPass = await UserCredentials.getPswd() ??  'NoPw';
+    String ogName = await UserCredentials.getNombre() ?? 'NoName';
     if (email == ogEmail && password == ogPass) {
       Provider.of<User>(context, listen: false).nameChange(ogName);
       Provider.of<User>(context, listen: false).loginChange(true);
       await UserCredentials.setAuthStatus(true);
-    }
+    } 
   }
 
   void authCheck() async {
@@ -40,8 +38,6 @@ class _loginState extends State<login> {
       Provider.of<User>(context, listen: false).loginChange(true);
       Provider.of<User>(context, listen: false).nameChange(nom);
     }
-
-    log(authStatus.toString());
   }
 
   @override
