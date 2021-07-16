@@ -1,9 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inprodi/utils/userCredentials.dart';
+import 'package:inprodi/widgets/boldtxt.dart';
+import 'package:inprodi/widgets/bottomText.dart';
+import 'package:inprodi/widgets/Subtitle.dart';
+import 'package:inprodi/widgets/mainButton.dart';
+import 'package:inprodi/utils/textfielStyle.dart' as decoration;
 
 class singnUp extends StatefulWidget {
-  const singnUp({Key ?key}) : super(key: key);
+  const singnUp({Key? key}) : super(key: key);
 
   @override
   _singnUpState createState() => _singnUpState();
@@ -16,91 +23,139 @@ class _singnUpState extends State<singnUp> {
   final _nomControl = TextEditingController();
   final _emControl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _TermsStatus = false;
+  bool _NewsStatus = false;
+
+  void change(bool cosa) {
+    !cosa;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              Text('Crear cuenta'),
-              Text('Nombre '),
-              TextFormField(
-                controller: _nomControl,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Campo obligatorio.';
-                  }
-                },
-              ),
-              Text('Correo'),
-              TextFormField(
-                controller: _emControl,
-                validator: (value) {
-                  if (value == null ||
-                      !value.contains('@') ||
-                      !value.contains('.')) {
-                    return 'Inserta un email valido.';
-                  }
-                },
-              ),
-              Text('Telefono'),
-              TextFormField(
-                controller: _telControl,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Campo obligatorio.';
-                  }
-                },
-              ),
-              Text('Contrasena'),
-              TextFormField(
-                controller: _pswdControl,
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.length < 8) {
-                    return 'Inserte una contrasena de mas de 8 caracteres.';
-                  }
-                },
-              ),
-              Row(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Checkbox(value: false, onChanged: null),
-                  Text('He leido y Acepto terminos y condiciones.'),
+                  //Header
+                  Center(child: BoldTxt(message: 'Crear cuenta')),
+                  SubtitleTxt(
+                      message:
+                          'Descubre los cientos de servicios de belleza que tenemos para ti!'),
+                  //Inicio de TextFields
+                  //Nombre
+                  Container(
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      child: Text('Nombre')),
+                  TextFormField(
+                    controller: _nomControl,
+                    decoration: decoration.InputStyle.TextInputDecoration,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Campo obligatorio.';
+                      }
+                    },
+                  ),
+                  //Email
+                  Container(
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      child: Text('Correo electónico')),
+                  TextFormField(
+                    controller: _emControl,
+                    decoration: decoration.InputStyle.TextInputDecoration,
+                    validator: (value) {
+                      if (value == null ||
+                          !value.contains('@') ||
+                          !value.contains('.')) {
+                        return 'Inserta un email válido.';
+                      }
+                    },
+                  ),
+                  //Telefono
+                  Container(
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      child: Text('Teléfono')),
+                  TextFormField(
+                    controller: _telControl,
+                    decoration: decoration.InputStyle.TextInputDecoration,
+                    validator: (value) {
+                      if (value == null || !value.contains('1')) {
+                        return 'Campo obligatorio.';
+                      }
+                    },
+                  ),
+                  //Contrasena
+                  Container(
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      child: Text('Contraseña')),
+                  TextFormField(
+                    controller: _pswdControl,
+                    obscureText: true,
+                    decoration: decoration.InputStyle.TextInputDecoration,
+                    validator: (value) {
+                      if (value == null || value.length < 8) {
+                        return 'Inserte una contraseña de mas de 8 caracteres.';
+                      }
+                    },
+                  ),
+                  //CheckBoxes
+                  Row(
+                    children: [
+                      Checkbox(
+                          value: this._TermsStatus,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              this._TermsStatus = !_TermsStatus;
+                            });
+                          }),
+                      Text(
+                        'He leído y acepto los terminos y condiciones.',
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      )
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      Checkbox(
+                          value: this._NewsStatus,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              this._NewsStatus = !_NewsStatus;
+                            });
+                          }),
+                      Text(
+                        'Deseo recibir noticias y promociones.',
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      )
+                    ],
+                  ),
+                  //Bottom Page
+                  MainButton(
+                    message: 'Registro',
+                    onpress: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await UserCredentials.setEmail(_emControl.text);
+                        await UserCredentials.setPswd(_pswdControl.text);
+                        await UserCredentials.setNombre(_nomControl.text);
+                        await UserCredentials.setTel(_telControl.text);
+                      }
+                    },
+                  ),
+                  BottomText(
+                      text: '¿Ya tienes cuenta?',
+                      onpress: () => {
+                            Navigator.of(context).pop(),
+                          },
+                      boldTxt: '¡Ingresa!')
                 ],
               ),
-              Row(
-                children: [
-                  Checkbox(value: false, onChanged: null),
-                  Text('Deseo recibir noticias y promociones.'),
-                ],
-              ),
-              TextButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate())
-                    {
-                     await UserCredentials.setEmail(_emControl.text);
-                     await UserCredentials.setPswd(_pswdControl.text);
-                     await UserCredentials.setNombre(_nomControl.text);
-                     await UserCredentials.setTel(_telControl.text);
-                    }
-                },
-                child: Text('Registrar'),
-              ),
-              Text('Ya tienes cuenta?'),
-              GestureDetector(
-                child: Text(
-                  'Ingresa!',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                onTap: () => {
-                  Navigator.of(context).pop(),
-                },
-              ),
-            ],
+            ),
           ),
         ),
       ),

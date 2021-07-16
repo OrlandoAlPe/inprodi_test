@@ -32,8 +32,8 @@ class _MyAppState extends State<MyApp> {
       title: 'inprodi',
       theme: ThemeData(
         //creando paleta de colores segun el diseno
-        primaryColor: Color(0xFFb74f5d),
-        accentColor: Color(0xFFCDBABC),
+        primaryColor: Color(0xFF8D4E68),//#8D4E68S
+        accentColor: Color(0xFFd6c7cc),//#E8DCE0
       ),
       routes: {
         // Creando rutas, 3 pantallas: Home, Login & SignUp

@@ -24,10 +24,15 @@ class _homeState extends State<home> {
       body: Container(
         child: Column(
           children: [
+            SizedBox(
+              height: 25,
+            ),
             Center(
               child: Text('Hola, ' + Provider.of<User>(context).nombre),
             ),
-            SizedBox(height: 50,),
+            SizedBox(
+              height: 25,
+            ),
             Flexible(
               child: DisplayData(),
             ),

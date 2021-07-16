@@ -57,7 +57,7 @@ class _DisplayDataState extends State<DisplayData> {
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  height: 150,
+                  height: 100,
                   child: Text(data[index].name + ' ' + data[index].email),
                 );
               });
