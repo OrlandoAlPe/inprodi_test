@@ -16,12 +16,14 @@ class login extends StatefulWidget {
 }
 
 class _loginState extends State<login> {
+  //controladores de texto
   final _emailCtrl = TextEditingController();
   final _pswdCtrl = TextEditingController();
 
+  //Funcion de login, comparando credenciales con input de usuario
   Future logIn(String email, String password) async {
-    String ogEmail = await UserCredentials.getEmail() ?? 'Nomail%.%!@';
-    String ogPass = await UserCredentials.getPswd() ?? 'NoPw';
+    String ogEmail = await UserCredentials.getEmail() ?? 'NoMail';
+    String ogPass = await UserCredentials.getPswd() ?? 'NoPass';
     String ogName = await UserCredentials.getNombre() ?? 'NoName';
     if (email == ogEmail && password == ogPass) {
       Provider.of<User>(context, listen: false).nameChange(ogName);
@@ -30,6 +32,7 @@ class _loginState extends State<login> {
     }
   }
 
+  //Funcion de estado, checa continuamente si hay un usario logeado para el inicio de sesion.
   void authCheck() async {
     bool authStatus;
     String nom;
@@ -66,28 +69,29 @@ class _loginState extends State<login> {
               Center(
                   child: SubtitleTxt(
                       message: 'Accede a cientos de servicios de Belleza')),
-              // Email TextField
+              // Campos de texto
+              //Correo
               Container(
                   margin: EdgeInsets.symmetric(vertical: 8),
                   child: Text('Correo')),
               Container(
-                margin: EdgeInsets.only(bottom: 20),
-                child: TextField(
-                  decoration: decoration.InputStyle.TextInputDecoration,
-                  controller: _emailCtrl,
-                ),
-              ),
-              //Password Textfield
+                  margin: EdgeInsets.only(bottom: 20),
+                  child: TextField(
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: decoration.InputStyle.TextInputDecoration,
+                    controller: _emailCtrl,
+                  )),
+              //Contrasena
               Container(
                   margin: EdgeInsets.symmetric(vertical: 8),
                   child: Text('Contraseña')),
               Container(
-                margin: EdgeInsets.only(bottom: 20),
-                child: TextField(
-                  obscureText: true,
-                  decoration: decoration.InputStyle.TextInputDecoration,
-                ),
-              ),
+                  margin: EdgeInsets.only(bottom: 20),
+                  child: TextField(
+                    obscureText: true,
+                    decoration: decoration.InputStyle.TextInputDecoration,
+                    controller: _pswdCtrl,
+                  )),
               //Bottom Page
               MainButton(
                 message: 'Entrar',
@@ -98,6 +102,7 @@ class _loginState extends State<login> {
               BottomText(
                   text: '¿No tienes cuenta?',
                   onpress: () => {
+                        //Navegacion a SignUp
                         Navigator.of(context).pushNamed('/signUp'),
                       },
                   boldTxt: '¡Registrate!')

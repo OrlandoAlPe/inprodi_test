@@ -1,11 +1,22 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:inprodi/utils/data.dart';
+import 'package:inprodi/widgets/listItem.dart';
 
 Future<List<Data>> fetchData() async {
+  final response =
+      await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
+  if (response.statusCode == 200) {
+    List jsonResponse = jsonDecode(response.body);
+    return jsonResponse.map((data) => new Data.fromJson(data)).toList();
+  } else {
+    throw Exception('Error');
+  }
+}
+
+Future<List<Data>> addData() async {
   final response =
       await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
   if (response.statusCode == 200) {
@@ -23,19 +34,17 @@ class DisplayData extends StatefulWidget {
 }
 
 class _DisplayDataState extends State<DisplayData> {
-  Future<List<Data>>? futureData;
+  Future<List<Data>> myData = fetchData();
   ScrollController _scrollController = new ScrollController();
 
   @override
   void initState() {
     super.initState();
-    futureData = fetchData();
 
     _scrollController.addListener(() async {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        
-          
+        myData = fetchData();
       }
     });
   }
@@ -48,7 +57,7 @@ class _DisplayDataState extends State<DisplayData> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Data>>(
-      future: futureData,
+      future: myData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Data> data = snapshot.data!;
@@ -58,13 +67,16 @@ class _DisplayDataState extends State<DisplayData> {
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   height: 100,
-                  child: Text(data[index].name + ' ' + data[index].email),
+                  child: ListElement(
+                      nombre: data[index].name, correo: data[index].email),
                 );
               });
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
         }
-        return CircularProgressIndicator();
+        return CircularProgressIndicator(
+          color: Theme.of(context).primaryColor,
+        );
       },
     );
   }

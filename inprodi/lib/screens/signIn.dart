@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inprodi/utils/userCredentials.dart';
@@ -26,10 +24,6 @@ class _singnUpState extends State<singnUp> {
   bool _TermsStatus = false;
   bool _NewsStatus = false;
 
-  void change(bool cosa) {
-    !cosa;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +47,7 @@ class _singnUpState extends State<singnUp> {
                       margin: EdgeInsets.symmetric(vertical: 8),
                       child: Text('Nombre')),
                   TextFormField(
+                    keyboardType: TextInputType.name,
                     controller: _nomControl,
                     decoration: decoration.InputStyle.TextInputDecoration,
                     validator: (value) {
@@ -66,6 +61,7 @@ class _singnUpState extends State<singnUp> {
                       margin: EdgeInsets.symmetric(vertical: 8),
                       child: Text('Correo electónico')),
                   TextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     controller: _emControl,
                     decoration: decoration.InputStyle.TextInputDecoration,
                     validator: (value) {
@@ -81,10 +77,11 @@ class _singnUpState extends State<singnUp> {
                       margin: EdgeInsets.symmetric(vertical: 8),
                       child: Text('Teléfono')),
                   TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: _telControl,
                     decoration: decoration.InputStyle.TextInputDecoration,
                     validator: (value) {
-                      if (value == null || !value.contains('1')) {
+                      if (value == null || value.isEmpty) {
                         return 'Campo obligatorio.';
                       }
                     },
@@ -139,6 +136,7 @@ class _singnUpState extends State<singnUp> {
                   MainButton(
                     message: 'Registro',
                     onpress: () async {
+                      //Validacion de campos de texto y seteo de datos persistentes
                       if (_formKey.currentState!.validate()) {
                         await UserCredentials.setEmail(_emControl.text);
                         await UserCredentials.setPswd(_pswdControl.text);
@@ -149,6 +147,7 @@ class _singnUpState extends State<singnUp> {
                   ),
                   BottomText(
                       text: '¿Ya tienes cuenta?',
+                      //Navegacion a login
                       onpress: () => {
                             Navigator.of(context).pop(),
                           },

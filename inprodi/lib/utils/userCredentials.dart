@@ -8,9 +8,9 @@ class UserCredentials {
   static const _telKey = 'telKey';
   static const _authKey = 'authKey';
   static Future init() async =>
-      _credentials = await SharedPreferences.getInstance();
+      _credentials = await SharedPreferences.getInstance(); //Inicializamos Shared Preferences
 
-  //Store
+  //Funciones para guardar Estados persistentes
   static Future setAuthStatus(bool logedin) async =>
       await _credentials?.setBool(_authKey, logedin);
 
@@ -26,7 +26,7 @@ class UserCredentials {
   static Future setPswd(String password) async =>
       await _credentials?.setString(_passKey, password);
 
-  //Load
+  //Funciones para cargar Estados persistentes
   static Future getNombre() async => await _credentials?.getString(_usernameKey);
 
   static Future getEmail() async => await _credentials?.getString(_emailKey);
