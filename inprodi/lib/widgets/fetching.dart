@@ -5,28 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:inprodi/utils/data.dart';
 import 'package:inprodi/widgets/listItem.dart';
 
-Future<List<Data>> fetchData() async {
-  final response =
-      await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
-  if (response.statusCode == 200) {
-    List jsonResponse = jsonDecode(response.body);
-    return jsonResponse.map((data) => new Data.fromJson(data)).toList();
-  } else {
-    throw Exception('Error');
-  }
-}
-
-Future<List<Data>> addData() async {
-  final response =
-      await http.get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
-  if (response.statusCode == 200) {
-    List jsonResponse = jsonDecode(response.body);
-    return jsonResponse.map((data) => new Data.fromJson(data)).toList();
-  } else {
-    throw Exception('Error');
-  }
-}
-
 class DisplayData extends StatefulWidget {
   const DisplayData({Key? key}) : super(key: key);
   @override
@@ -34,50 +12,98 @@ class DisplayData extends StatefulWidget {
 }
 
 class _DisplayDataState extends State<DisplayData> {
-  Future<List<Data>> myData = fetchData();
-  ScrollController _scrollController = new ScrollController();
+  bool? _error;
+  bool? _loading;
+  List<Data>? _usuarios;
+  final int _nextPageThreshold = 5;
+
+  Future<void> fetchUsers() async { //Consigue los datos de la url y los añade a la lista.
+    try {
+      final response = await http
+          .get(Uri.parse('https://jsonplaceholder.typicode.com/users'));
+      List<Data> fetchedUsers = Data.parseList(json.decode(response.body));
+      setState(() {
+        _loading = false;
+        _usuarios!.addAll(fetchedUsers);
+      });
+    } catch (e) {
+      setState(() {
+        _loading = false;
+        _error = true;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-
-    _scrollController.addListener(() async {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        myData = fetchData();
-      }
-    });
-  }
-
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+    _error = false;
+    _loading = true;
+    _usuarios = [];
+    fetchUsers();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Data>>(
-      future: myData,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<Data> data = snapshot.data!;
-          return ListView.builder(
-              controller: _scrollController,
-              itemCount: data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: 100,
-                  child: ListElement(
-                      nombre: data[index].name, correo: data[index].email),
-                );
-              });
-        } else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-        return CircularProgressIndicator(
-          color: Theme.of(context).primaryColor,
-        );
-      },
-    );
+    if (_usuarios!.isEmpty) {
+      if (_loading == true) {
+        return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ));
+      } else if (_error == true) {
+        return Center(
+            child: InkWell(
+          onTap: () {
+            setState(() {
+              _loading = true;
+              _error = false;
+              fetchUsers();
+            });
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text('Error, toca para cargar de nuevo.'),
+          ),
+        ));
+      }
+    } else {
+      return ListView.builder(
+          itemCount: _usuarios!.length,
+          itemBuilder: (context, index) {
+            if (index == _usuarios!.length - _nextPageThreshold) {
+              fetchUsers();
+            }
+            if (index == _usuarios!.length) {
+              if (_error == true) {
+                return Center(
+                    child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _loading = true;
+                      _error = false;
+                      fetchUsers();
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text('Error al cargar datos, toca para cargar.'),
+                  ),
+                ));
+              } else {
+                return Center(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ));
+              }
+            }
+            final Data user = _usuarios![index];
+            return (ListElement(correo: user.email, nombre: user.name));
+          });
+    }
+    return Container();
   }
 }

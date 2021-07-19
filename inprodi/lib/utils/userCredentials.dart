@@ -8,7 +8,7 @@ class UserCredentials {
   static const _telKey = 'telKey';
   static const _authKey = 'authKey';
   static Future init() async =>
-      _credentials = await SharedPreferences.getInstance(); //Inicializamos Shared Preferences
+      _credentials = await SharedPreferences.getInstance(); //Inicializacion de Shared Preferences
 
   //Funciones para guardar Estados persistentes
   static Future setAuthStatus(bool logedin) async =>

@@ -9,4 +9,8 @@ class Data {
       email: json['email'],
     );
   }
+  static List<Data> parseList(List<dynamic> list) {
+    return list.map((i) => Data.fromJson(i)).toList();
+  } 
 }
+

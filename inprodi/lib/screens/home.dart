@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:inprodi/widgets/bottombar.dart';
 import 'package:inprodi/widgets/fetching.dart';
 import 'package:inprodi/widgets/homeTitle.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class _homeState extends State<home> {
         leadingWidth: 100,
         centerTitle: true,
       ),
-      bottomNavigationBar: BottomAppBar(color: Colors.white,child: Row(children: [Text('sd'),Icon(Icons.calendar_today_rounded)],),),
+      bottomNavigationBar: BottomBar(),
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.calendar_today_outlined,

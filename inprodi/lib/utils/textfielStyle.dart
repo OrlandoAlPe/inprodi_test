@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+//decoracion de text input
  class InputStyle {
   static var TextInputDecoration = InputDecoration(
     filled: true,

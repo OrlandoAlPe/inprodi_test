@@ -21,8 +21,72 @@ class _singnUpState extends State<singnUp> {
   final _nomControl = TextEditingController();
   final _emControl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _TermsStatus = false;
-  bool _NewsStatus = false;
+  bool _TermsStatus = true;
+  bool _NewsStatus = true;
+
+  Future<void> registro() async { //Crea cuenta guardando datos con shared Preferences
+    await UserCredentials.setEmail(_emControl.text);
+    await UserCredentials.setPswd(_pswdControl.text);
+    await UserCredentials.setNombre(_nomControl.text);
+    await UserCredentials.setTel(_telControl.text);
+    _emControl.clear();
+    _pswdControl.clear();
+    _nomControl.clear();
+    _telControl.clear();
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Cuenta creada exitosamente!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Escribe tus datos en el login para ingresar'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok!'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> CBcheck() {//checador de checkboxes
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Cuenta no creada!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text(
+                    'Ingresa bien los datos y recuerda aceptar los terminos y condiciones.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok!'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,11 +201,11 @@ class _singnUpState extends State<singnUp> {
                     message: 'Registro',
                     onpress: () async {
                       //Validacion de campos de texto y seteo de datos persistentes
-                      if (_formKey.currentState!.validate()) {
-                        await UserCredentials.setEmail(_emControl.text);
-                        await UserCredentials.setPswd(_pswdControl.text);
-                        await UserCredentials.setNombre(_nomControl.text);
-                        await UserCredentials.setTel(_telControl.text);
+                      if (_formKey.currentState!.validate() &&
+                          this._TermsStatus == true) {
+                        registro();
+                      } else {
+                        CBcheck();
                       }
                     },
                   ),

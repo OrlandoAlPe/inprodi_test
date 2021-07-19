@@ -21,7 +21,7 @@ class _loginState extends State<login> {
   final _pswdCtrl = TextEditingController();
 
   //Funcion de login, comparando credenciales con input de usuario
-  Future logIn(String email, String password) async {
+  Future<void> logIn(String email, String password) async {
     String ogEmail = await UserCredentials.getEmail() ?? 'NoMail';
     String ogPass = await UserCredentials.getPswd() ?? 'NoPass';
     String ogName = await UserCredentials.getNombre() ?? 'NoName';
@@ -29,10 +29,29 @@ class _loginState extends State<login> {
       Provider.of<User>(context, listen: false).nameChange(ogName);
       Provider.of<User>(context, listen: false).loginChange(true);
       await UserCredentials.setAuthStatus(true);
+    } else {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Correo o contraseña incorrectos.'),
+            
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Ok!'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
-  //Funcion de estado, checa continuamente si hay un usario logeado para el inicio de sesion.
+  //Funcion de estado, checa si hay un usario logeado para iniciar sesion despues de cerrar la app con shared preferences.
   void authCheck() async {
     bool authStatus;
     String nom;
